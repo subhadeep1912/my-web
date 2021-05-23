@@ -1,5 +1,6 @@
 import './App.css';
 import * as THREE from 'three'
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 function App() {
@@ -11,21 +12,47 @@ function App() {
       canvas: document.querySelector('#bg')
     }
   )
-
+  
   renderer.setPixelRatio(window.devicePixelRatio)
-  renderer.setSize(window.innerWidth, window.innerHeight)
-  const control = new OrbitControls(camera, renderer.domElement)
-  renderer.render( scene, camera)
-  camera.position.setZ(30)
-  const geometry = new THREE.BoxGeometry(10, 10, 10)
-  const material = new THREE.MeshStandardMaterial({color: 0xff3423})
-  const box = new THREE.Mesh(geometry, material)
-  const light1 = new THREE.AmbientLight(0xffff)
-  const light2 = new THREE.PointLight(0xffff)
-  light2.position.setZ(0,0,30)
-  const gridHelper = new THREE.GridHelper(100, 100)
 
-  scene.add(box, light1, gridHelper)
+  renderer.setSize(window.innerWidth, window.innerHeight)
+
+  const control = new OrbitControls(camera, renderer.domElement)
+
+  renderer.render( scene, camera)
+
+  camera.position.setZ(30)
+
+  const obamaTexture = new THREE.TextureLoader().load('https://pbs.twimg.com/media/ETAi5IJXkAA7mre?format=jpg&name=medium' ,undefined, undefined, (err) => {console.log(err); console.log("an error happened")})
+  
+  // console.log(obamaTexture)
+
+  const geometry = new THREE.SphereGeometry(10)
+
+  const material = new THREE.MeshBasicMaterial({map: obamaTexture})
+  // console.log(material)
+
+  const box = new THREE.Mesh(geometry, material)
+
+  const light1 = new THREE.AmbientLight(0xffff)
+
+  const obamaTexture1 = new THREE.TextureLoader().load('https://pbs.twimg.com/profile_images/1329647526807543809/2SGvnHYV_400x400.jpg')
+
+  function addStar() {
+  const geometry = new THREE.BoxGeometry(2, 2, 2)
+  const material = new THREE.MeshStandardMaterial({map: obamaTexture1})
+
+  const star = new THREE.Mesh(geometry, material)
+
+  const [x,y,z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread( 100 ))
+  star.position.set(x, y, z)
+  scene.add(star)
+}
+  Array(200).fill().forEach(addStar)
+ 
+  // const gridHelper = new THREE.GridHelper(100, 100, new THREE.Color(0x000000), new THREE.Color(0x000000) )
+  // scene.add(gridHelper)
+  scene.add(box, light1)
   function animate() {
     requestAnimationFrame( animate) ;
 
